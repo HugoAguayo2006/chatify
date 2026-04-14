@@ -1,13 +1,15 @@
 
 
 .chats-container{
-    width: 700px;
+    width: 100%;
+    max-width: 800px;
     height: 600px;
     background-color: rgba(47, 122, 0, 0.281);
+    box-sizing: border-box;
 }
 
 .chats{
-        margin-left: 10px;
+    margin-left: 10px;
     margin-top: 15px;
 }
 

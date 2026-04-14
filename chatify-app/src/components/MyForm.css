@@ -1,12 +1,21 @@
 
+.form-container{
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
 
 .barra{
-    width: 693px;
+    width: 100%;
+    max-width: 800px;
     height: 30px;
+    box-sizing: border-box;
 }
 
 .btn-send{
-    margin-top: 10px;
     width: 100px;
     height: 30px;
 }
