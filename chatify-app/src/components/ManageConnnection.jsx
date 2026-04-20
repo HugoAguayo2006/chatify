@@ -4,12 +4,13 @@ import { socket } from '../../socket'
 function ManageConnnection() {
 
     const handleConection = (con) =>{
+      console.log({con})
         switch (con){
             case 'on':
-                socket.on('connect',onConnnect)
+                socket.connect()
                 break
             case 'off':
-                socket.on('disconnect',onDisconnect)
+                socket.disconnect()
                 break
             default:
                 break

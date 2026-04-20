@@ -18,12 +18,16 @@ function MyForm() {
 
   return (
     <div className='form-container'>
-      <input type="text" name="message" value={message}
-      onChange={handleOnchange} className='barra'/>
+      <input 
+      type="text" 
+      name="message" 
+      value={message}
+      onChange={handleOnchange} 
+      className='barra'/>
       <button className="btn-send" onClick={handleClick}> Send</button>
     </div>
   )
-  
+
 }
 
 export default MyForm

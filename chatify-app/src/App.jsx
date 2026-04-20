@@ -36,6 +36,7 @@ function App() {
       <div className="center">
         <Chats/>
         <MyForm/>
+        <ManageConnnection/>
       </div>
       <div className="right">
         <Users/>
