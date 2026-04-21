@@ -19,6 +19,7 @@ function App() {
      // console.log("Conectado")
     //}
 
+    
     socket.on('connect',onConnnect)
     return () => {
       socket.off("disconnect")
