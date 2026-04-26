@@ -1,7 +1,6 @@
 // Como correr mi base datos local: 
 // DATABASE_URL="postgresql://postgres:Pepeh2014.@localhost:5433/chatify" npm start
 import express from 'express';
-import { disconnect } from 'node:cluster';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import pg from "pg"
@@ -41,39 +40,74 @@ app.get('/', (req, res) => {
 
 io.on('connection', async (socket) => {
   console.log('a user connected', socket.id);
-  if (!socket.recovered) {
-      try {
-        const result = await pool.query(
-          // se agregan datos a la consulta
-          'SELECT id, content, username, room, created_at FROM messages WHERE id > $1 ORDER BY id',
-          [socket.handshake.auth.serverOffset || 0]
-        );
-        
-        for (const row of result.rows) {
-          socket.emit('chat message', row.content, row.id);
-        }
-      } catch (e) {
-        console.error('Error fetching messages:', e);
-      }
-    }
 
+  // PRIMER SOCKET nuevo que recibe el nombre del usuario y el chat/room en el que esta
+  socket.on('join room', async({ username, chat }) => {
+
+    // En el socket guardamos data
+    socket.data.username = username;
+    socket.data.room = chat;
+    // Metemos al usuario al chat correspondiente
+    socket.join(chat);
+
+    // Impresion en la consola
+    console.log("Join room | usuario:", username, "| room:", chat);
+
+    try {
+    // Filtrado para traer los de una sala especifica WHERE room = $1 
+      const result = await pool.query(
+        `SELECT id, content, username, room, created_at
+         FROM messages
+         WHERE room = $1       
+         ORDER BY created_at ASC, id ASC`,
+        [chat]       // Filtrado para traer los de una sala especifica
+      );
+
+      // Enviamos a la UI chat history
+      /*
+        {
+          id: 1,
+          content: "Hola",
+          username: "Hugo",
+          room: "general",
+          created_at: "2026-04-26T..."
+        }
+      */
+      socket.emit('chat history', result.rows);
+    } catch (e) {
+      console.error('Error fetching room messages:', e);
+    }
+  })
+
+  // SEGUNDO SOCKET nuevo que recibe el chat/room en el que esta
+  socket.on('leave room', async({ chat }) => {
+    console.log("Leave room| room:", chat);
+    // Como entramos con join debemos de salir
+    socket.leave(chat);
+  })
+
+// TECER SOCKET, EL QUE EMPEZAMOS A TRABAJAR EN CLASE
  socket.on('chat message', async (msg) => {
     // Nueva logica de asignacion de valores
     const message = typeof msg === 'object' ? msg : { content: msg };
     const content = message.content;
-    const username = message.username || 'anonymous';
-    const room = message.room || 'general';
+    // Principalmente por que guardamos data en el socket
+    const username = socket.data.username || 'anonymous';
+    const room = socket.data.room || 'General';
+
 
     console.log('message: ' + content);
     let result;
     try {
       result = await pool.query(
-        // Por lo tanto se insertan de diferente manera
-        'INSERT INTO messages (content, username, room) VALUES ($1, $2, $3) RETURNING id',
+        `INSERT INTO messages (content, username, room)
+         VALUES ($1, $2, $3)
+         RETURNING id, content, username, room, created_at`,
         [content, username, room]
       );
-      // include the offset with the message
-      io.emit('chat message', content, result.rows[0].id);
+      // Envía el mensaje guardado a todos los sockets que están dentro de esa sala.
+      // result.rows[0] es el mensaje recién insertado.
+      io.to(room).emit('chat message', result.rows[0]);
     } catch (e) {
       console.error('Error inserting message:', e);
       return;
@@ -83,6 +117,7 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected', socket.id);
   });
+  // Recuperar mensajes que se mandaron cuando tu estuviste desconectado
   connectionStateRecovery: {
 
   }
