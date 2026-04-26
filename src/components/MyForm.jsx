@@ -4,15 +4,18 @@ import './MyForm.css'
 
 function MyForm() {
 
-    const[message, setMessage] = useState('')
+    const[messageData, setmessageData] = useState('')
+    
 
     const handleOnchange = (e) => {
-        setMessage(e.target.value);
+        setmessageData(e.target.value);
     }
 
     const handleClick = (e) => {
         e.preventDefault()
-        socket.emit('chat message', message)
+        // TECER SOCKET 
+        socket.emit('chat message', messageData)
+        setmessageData('')
     }
 
 
@@ -20,8 +23,8 @@ function MyForm() {
     <div className='form-container'>
       <input 
       type="text" 
-      name="message" 
-      value={message}
+      name="messageData" 
+      value={messageData}
       onChange={handleOnchange} 
       className='barra'/>
       <button className="btn-send" onClick={handleClick}> Send</button>

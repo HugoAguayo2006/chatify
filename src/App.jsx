@@ -10,6 +10,9 @@ import { Socket } from 'socket.io-client'
 
 function App() {
   const [count, setCount] = useState(0)
+  // Dos nuevas variables
+  const [chat, setChat] = useState('General')
+  const [username, setUsername] = useState("Hugo")
 
   useEffect(()=>{
     const onConnnect = () =>{
@@ -32,10 +35,10 @@ function App() {
     <>
     <div className="app-layout">
       <div className="left">
-        <Channels/>
+        <Channels chat={chat} setChat={setChat} username={username}/>
       </div>
       <div className="center">
-        <Chats/>
+        <Chats chat={chat}/>
         <MyForm/>
         <ManageConnnection/>
       </div>
