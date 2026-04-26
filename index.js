@@ -1,10 +1,10 @@
-// Como correr mi base datos local: 
+// Como correr mi base datos local en terminal: 
 // DATABASE_URL="postgresql://postgres:Pepeh2014.@localhost:5433/chatify" npm start
+
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import pg from "pg"
-
 
 const app = express();
 const server = createServer(app);
