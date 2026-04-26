@@ -1,3 +1,5 @@
+// Como correr mi base datos local: 
+// DATABASE_URL="postgresql://postgres:Pepeh2014.@localhost:5433/chatify" npm start
 import express from 'express';
 import { disconnect } from 'node:cluster';
 import { createServer } from 'node:http';
@@ -21,12 +23,14 @@ const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// create our 'messages' table (you can ignore the 'client_offset' column for now)
+// Modificamos la tabla para que se adecue a los campos que se nos piden
 await pool.query(`
   CREATE TABLE IF NOT EXISTS messages (
       id SERIAL PRIMARY KEY,
-      client_offset TEXT UNIQUE,
-      content TEXT
+      content TEXT,
+      username TEXT,
+      room TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 `);
 
@@ -40,7 +44,8 @@ io.on('connection', async (socket) => {
   if (!socket.recovered) {
       try {
         const result = await pool.query(
-          'SELECT id, content FROM messages WHERE id > $1 ORDER BY id',
+          // se agregan datos a la consulta
+          'SELECT id, content, username, room, created_at FROM messages WHERE id > $1 ORDER BY id',
           [socket.handshake.auth.serverOffset || 0]
         );
         
@@ -53,15 +58,22 @@ io.on('connection', async (socket) => {
     }
 
  socket.on('chat message', async (msg) => {
-    console.log('message: ' + msg);
+    // Nueva logica de asignacion de valores
+    const message = typeof msg === 'object' ? msg : { content: msg };
+    const content = message.content;
+    const username = message.username || 'anonymous';
+    const room = message.room || 'general';
+
+    console.log('message: ' + content);
     let result;
     try {
       result = await pool.query(
-        'INSERT INTO messages (content) VALUES ($1) RETURNING id',
-        [msg]
+        // Por lo tanto se insertan de diferente manera
+        'INSERT INTO messages (content, username, room) VALUES ($1, $2, $3) RETURNING id',
+        [content, username, room]
       );
       // include the offset with the message
-      io.emit('chat message', msg, result.rows[0].id);
+      io.emit('chat message', content, result.rows[0].id);
     } catch (e) {
       console.error('Error inserting message:', e);
       return;
