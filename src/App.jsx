@@ -7,12 +7,21 @@ import Channels from './components/Channels'
 import Chats from './components/Chats'
 import Users from './components/Users'
 import { Socket } from 'socket.io-client'
+import UsernamePrompt from './components/UsernamePrompt'
+
 
 function App() {
   const [count, setCount] = useState(0)
-  // Dos nuevas variables
+  //Username guardado por room
+  const STORAGE_KEY='Chatify_usernames_by_room'
   const [chat, setChat] = useState('General')
-  const [username, setUsername] = useState("Hugo")
+  const [username, setUsername] = useState("")
+
+  //Leemos usuarios guardados
+  const getUsernamesByRoom = () => {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
+  }
+
 
   useEffect(()=>{
     const onConnnect = () =>{
@@ -31,6 +40,30 @@ function App() {
     //socket.on('disconnect',onDisconnect)
   },[])
 
+  useEffect(() => {
+    const usernamesByRoom = getUsernamesByRoom()
+    const savedUsername = usernamesByRoom[chat]
+
+    //Si existe, entra al room
+    if (savedUsername){
+      setUsername(savedUsername)
+    }else{
+      setUsername('')
+    }
+  },[chat])
+
+  //Guarda username del room actual
+  const handleSaveUsername = (newUsername) => {
+    const cleanUsername = newUsername.trim()
+    if (!cleanUsername) return
+
+    const usernamesByRoom = getUsernamesByRoom()
+    const updatedUsernames={...usernamesByRoom,[chat]: cleanUsername}
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(updatedUsernames))
+    setUsername(cleanUsername)
+  }
+
+
   return (
     <>
     <div className="app-layout">
@@ -38,9 +71,15 @@ function App() {
         <Channels chat={chat} setChat={setChat} username={username}/>
       </div>
       <div className="center">
-        <Chats chat={chat}/>
-        <MyForm/>
-        <ManageConnnection/>
+        {username ? (
+          <>
+            <Chats chat={chat}/>
+            <MyForm/>
+            <ManageConnnection/>
+          </>
+          ):(
+          <UsernamePrompt room={chat} onSubmit={handleSaveUsername}/>
+        )}
       </div>
       <div className="right">
         <Users/>

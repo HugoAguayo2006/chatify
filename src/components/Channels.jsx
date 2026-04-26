@@ -6,6 +6,8 @@ function Channels({chat, setChat, username}) {
 
   useEffect(() => {
     const joinCurrentRoom = () => {
+      //No entra sin username
+      if(!username) return
       console.log('Enviando join room:', username, chat)
       socket.emit('join room', { username, chat })
     }
