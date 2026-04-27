@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { socket } from '../socket';
 import './Chats.css'
 
-function Chats({chat}) {
+function Chats({chat,username}) {
 
   const [messages, setMessages] = useState([]);
 
@@ -13,12 +13,6 @@ function Chats({chat}) {
       setMessages(messagesFromDB);
     };
 
-    /*
-    messages = [
-      { id: 1, username: "Ana", content: "Hola" },
-      { id: 2, username: "Luis", content: "Qué onda" }
-    ]
-    */
     const handleChatMessage = (newMessage) => {
       console.log("Mensaje desde el server:", newMessage);
       socket.auth.serverOffset = newMessage.id;
@@ -37,16 +31,21 @@ function Chats({chat}) {
 
   return (
     <div className='chats-container'>
-      <div className='chats'>
-        <p className='chat-title'># {chat}</p>
+        <p className='chat-title'>{chat} // Name: {username}</p>
         <div className='mensajes'>
-          {messages.map((m) => (
-            <p key={m.id}>
-              <strong>{m.username}</strong>: {m.content}
-            </p>
-          ))}
+          {messages.map((m)=>{
+            //Detecta si el mensaje es del usuario actual
+            const isOwnMessage=m.username===username
+            return(
+              <p 
+                key={m.id}
+                className={isOwnMessage ? 'message own-message':'message other-message'}
+              >
+                <strong>{m.username}</strong>: {m.content}
+              </p>
+            )
+          })}
         </div>
-      </div>
     </div>
   )
 }

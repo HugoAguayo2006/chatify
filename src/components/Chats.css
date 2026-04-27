@@ -28,7 +28,9 @@
 
 .chat-title{
     flex-shrink: 0;
-
+    height: 80px;
+    font-style: italic;
+    font-weight: bold;
 }
 
 .mensajes{
@@ -37,4 +39,14 @@
     align-items: flex-start;
     gap: 8px;
     margin-top: auto;
+}
+
+.own-message{
+    align-self: flex-end;
+    text-align: right;
+}
+
+.other-message{
+    align-self: flex-start;
+    text-align: left;
 }

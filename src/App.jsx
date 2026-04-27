@@ -16,6 +16,9 @@ function App() {
   const STORAGE_KEY='Chatify_usernames_by_room'
   const [chat, setChat] = useState('General')
   const [username, setUsername] = useState("")
+  const [unlockedRooms, setUnlockedRooms] = useState({})
+  
+
 
   //Leemos usuarios guardados
   const getUsernamesByRoom = () => {
@@ -45,12 +48,12 @@ function App() {
     const savedUsername = usernamesByRoom[chat]
 
     //Si existe, entra al room
-    if (savedUsername){
-      setUsername(savedUsername)
-    }else{
+    if (unlockedRooms[chat]) {
+      setUsername(unlockedRooms[chat])
+    } else {
       setUsername('')
     }
-  },[chat])
+  },[chat,unlockedRooms])
 
   //Guarda username del room actual
   const handleSaveUsername = (newUsername) => {
@@ -60,6 +63,7 @@ function App() {
     const usernamesByRoom = getUsernamesByRoom()
     const updatedUsernames={...usernamesByRoom,[chat]: cleanUsername}
     localStorage.setItem(STORAGE_KEY,JSON.stringify(updatedUsernames))
+    setUnlockedRooms({...unlockedRooms,[chat]: cleanUsername})
     setUsername(cleanUsername)
   }
 
@@ -73,7 +77,7 @@ function App() {
       <div className="center">
         {username ? (
           <>
-            <Chats chat={chat}/>
+            <Chats chat={chat} username={username}/>
             <MyForm/>
             <ManageConnnection/>
           </>
