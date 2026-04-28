@@ -17,6 +17,7 @@ function App() {
   const [chat, setChat] = useState('General')
   const [username, setUsername] = useState("")
   const [unlockedRooms, setUnlockedRooms] = useState({})
+  const [activeUsers, setActiveUsers] = useState([])
   
 
 
@@ -36,9 +37,16 @@ function App() {
 
     
     socket.on('connect',onConnnect)
+
+    socket.on('room users', (users) => {
+      console.log("Usuarios del server:", users);
+      setActiveUsers(users)
+    })
+
     return () => {
       socket.off("disconnect")
       socket.off("connect", onConnnect)
+      socket.off("room users")
     }
     //socket.on('disconnect',onDisconnect)
   },[])
@@ -54,6 +62,13 @@ function App() {
       setUsername('')
     }
   },[chat,unlockedRooms])
+
+  useEffect(() => {
+    if (username && chat) {
+      socket.emit('join room', { username, chat: chat })
+    }
+  }, [username, chat])
+
 
   //Guarda username del room actual
   const handleSaveUsername = (newUsername) => {
@@ -86,7 +101,7 @@ function App() {
         )}
       </div>
       <div className="right">
-        <Users/>
+        <Users activeUsers={activeUsers}/>
       </div>
     </div>
     </>
