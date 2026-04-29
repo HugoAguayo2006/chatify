@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { socket } from '../socket';
 import './Chats.css'
 
-function Chats({chat,username}) {
+function Chats({ chat, username }) {
 
   const [messages, setMessages] = useState([]);
 
@@ -22,7 +22,7 @@ function Chats({chat,username}) {
     socket.on('chat history', handleChatHistory);
     socket.on('chat message', handleChatMessage);
 
-    return() => {
+    return () => {
       // Apagar el listener
       socket.off('chat history', handleChatHistory);
       socket.off('chat message', handleChatMessage);
@@ -31,26 +31,26 @@ function Chats({chat,username}) {
 
   return (
     <div className='chats-container'>
-        <div className='chat-header'>{chat} // Name: {username}</div>
-        
-        <div className='messages-list'>
-          {messages.map((m) => {
-            // detecta si el mensaje es del usuario actual
-            const isOwnMessage = m.username === username;
-            
-            return (
-              <div 
-                key={m.id}
-                className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
-              >
-                <div className='message-item'>
-                  <span className='message-username'>{m.username}</span>
-                  <div className='message-content'>{m.content}</div>
-                </div>
+      <div className='chat-header'>{chat} // Name: {username}</div>
+
+      <div className='messages-list'>
+        {messages.map((m) => {
+          // detecta si el mensaje es del usuario actual
+          const isOwnMessage = m.username === username;
+
+          return (
+            <div
+              key={m.id}
+              className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
+            >
+              <div className='message-item'>
+                <span className='message-username'>{m.username}</span>
+                <div className='message-content'>{m.content}</div>
               </div>
-            )
-          })}
-        </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
