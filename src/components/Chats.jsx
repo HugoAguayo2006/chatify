@@ -6,6 +6,12 @@ import moment from 'moment';
 function Chats({ chat, username }) {
 
   const [messages, setMessages] = useState([]);
+  const [userTyping, setUserTyping] = useState(null);
+  const timer = useRef({})
+
+  useEffect(() => {
+    console.log("STATE UPDATED:", userTyping);
+  }, [userTyping]);
 
   useEffect(() => {
     const handleChatHistory = (messagesFromDB) => {
@@ -22,10 +28,28 @@ function Chats({ chat, username }) {
     socket.on('chat history', handleChatHistory);
     socket.on('chat message', handleChatMessage);
 
+    const handle_typing = (user) => {
+      setUserTyping((current) => {
+        if (current && current.username !== user.username) {
+          return current;
+        }
+
+        return user;
+      });
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        setUserTyping(null);
+      }, 2500);
+    }
+
+    socket.on('typing', handle_typing)
+
     return () => {
       // Apagar el listener
       socket.off('chat history', handleChatHistory);
       socket.off('chat message', handleChatMessage);
+      socket.off('typing', handle_typing)
+      if (timer.current) clearTimeout(timer.current);
     }
   }, []);
 
@@ -35,6 +59,8 @@ function Chats({ chat, username }) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+
 
   return (
     <div className='chats-container'>
@@ -57,12 +83,15 @@ function Chats({ chat, username }) {
                 </div>
                 <div className='message-time'>{moment(m.created_at).fromNow()}</div>
               </div>
-
               <div ref={scrollRef} />
             </div>
           )
         })}
       </div>
+
+      {
+        userTyping && userTyping.username != username && <div>{userTyping.username} is typing</div>
+      }
     </div>
   )
 }

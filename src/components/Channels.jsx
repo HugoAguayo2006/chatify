@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { socket } from '../socket'
 import './Channels.css'
 
 export default function Channels({ chat, setChat, username }) {
+  const [usersTyping, setUsersTyping] = useState([]);
+
   useEffect(() => {
     const joinCurrentRoom = () => {
       if (!username) return

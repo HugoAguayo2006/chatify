@@ -96,7 +96,7 @@ function App() {
           {username ? (
             <>
               <Chats chat={chat} username={username} />
-              <MyForm />
+              <MyForm username={username} chat={chat} />
               <ManageConnnection />
             </>
           ) : (
