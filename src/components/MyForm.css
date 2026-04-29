@@ -1,6 +1,17 @@
+.chat-form-container {
+  align-items: stretch;
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease;
+}
+
+.chat-form-container:focus-within {
+  box-shadow: 0 0 0 3px #3ba55d;
+}
+
 .chat-form-input {
   flex-grow: 1; 
-  padding: 14px 18px;
+  min-height: 56px;
+  padding: 0 18px;
   background-color: #40444b; 
   color: #dcddde;
   border: none;
@@ -11,10 +22,10 @@
 
 .chat-form-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px #3ba55d; 
 }
 
 .chat-form-btn {
+  min-height: 56px;
   padding: 0 24px;
   background-color: #3ba55d;
   color: #ffffff;

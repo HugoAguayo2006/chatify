@@ -11,21 +11,22 @@ function MyForm() {
         setmessageData(e.target.value);
     }
 
-    const handleClick = (e) => {
-        e.preventDefault()
-        // TECER SOCKET 
-        socket.emit('chat message', messageData)
-        setmessageData('')
+    const handleSubmit = (e) => {
+      e.preventDefault()
+
+      if (!messageData.trim()) return
+
+
+// Tercer socket
+      socket.emit('chat message', messageData)
+      setmessageData('')
     }
 
 
   return (
     <form 
       className='chat-form-container' 
-      onSubmit={(e) => {
-        e.preventDefault(); 
-        handleClick();     
-      }}
+      onSubmit={handleSubmit}
     >
       <input 
         type="text" 
@@ -37,7 +38,7 @@ function MyForm() {
         autoComplete="off" /* esto hace que no aparezcan mensajes pasados*/
       />
       <button type="submit" className="chat-form-btn"> 
-        Send 
+         Enviar 
       </button>
     </form>
   )

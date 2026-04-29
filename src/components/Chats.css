@@ -1,6 +1,7 @@
 .chats-container {
   background-color: #36393f;
-  height: 100vh;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -19,6 +20,7 @@
 
 .messages-list {
   flex-grow: 1;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 10px;
   display: flex;
@@ -76,8 +78,7 @@
 .chat-form-container {
   display: flex;
   gap: 12px;
-  padding-top: 15px;
+  padding: 15px 0 0;
   border-top: 1px solid #4f545c; 
   background-color: #36393f;
 }
-

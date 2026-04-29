@@ -1,5 +1,6 @@
 import React from 'react'
 import { socket } from '../socket'
+import './ManageConnnection.css'
 
 function ManageConnnection() {
 
@@ -18,9 +19,9 @@ function ManageConnnection() {
     }
 
   return (
-    <div>
-      <button onClick={()=> handleConection('on')}> Conection</button>
-      <button onClick={()=> handleConection('off')}> Disconection</button>
+    <div className='connection-actions'>
+      <button className='connection-btn connect' onClick={()=> handleConection('on')}> Conexión</button>
+      <button className='connection-btn disconnect' onClick={()=> handleConection('off')}> Desconexión</button>
     </div>
   )
 }
