@@ -41,6 +41,19 @@ app.get('/', (req, res) => {
 io.on('connection', async (socket) => {
   console.log('a user connected', socket.id);
 
+  // Función auxiliar para actualizar la lista de usuarios en una sala
+  const updateRoomUsers = async (roomName) => {
+    // obtener todos los usuarios conectados a una sala especifica
+    const socketsInRoom = await io.in(roomName).fetchSockets();
+    // Extraemos solo los nombres de usuario y evitamos nulos
+    const users = socketsInRoom.map(s => s.data.username).filter(Boolean);
+    // quitar duplicados
+    const uniqueUsers = [...new Set(users)];
+    
+    // Emitimos la lista a todos en la sala
+    io.to(roomName).emit('room users', uniqueUsers);
+  };
+
   // PRIMER SOCKET nuevo que recibe el nombre del usuario y el chat/room en el que esta
   socket.on('join room', async({ username, chat }) => {
 
@@ -53,6 +66,8 @@ io.on('connection', async (socket) => {
     // Impresion en la consola
     console.log("Join room | usuario:", username, "| room:", chat);
 
+    await updateRoomUsers(chat);
+
     try {
     // Filtrado para traer los de una sala especifica WHERE room = $1 
       const result = await pool.query(
@@ -62,6 +77,8 @@ io.on('connection', async (socket) => {
          ORDER BY created_at ASC, id ASC`,
         [chat]       // Filtrado para traer los de una sala especifica
       );
+
+
 
       // Enviamos a la UI chat history
       /*
@@ -84,6 +101,7 @@ io.on('connection', async (socket) => {
     console.log("Leave room| room:", chat);
     // Como entramos con join debemos de salir
     socket.leave(chat);
+    await updateRoomUsers(chat);
   })
 
 // TECER SOCKET, EL QUE EMPEZAMOS A TRABAJAR EN CLASE
@@ -114,13 +132,21 @@ io.on('connection', async (socket) => {
     }
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     console.log('User disconnected', socket.id);
+
+    const room = socket.data.room;
+    if (room) {
+      await updateRoomUsers(room);
+    }
+
   });
   // Recuperar mensajes que se mandaron cuando tu estuviste desconectado
   connectionStateRecovery: {
 
   }
+
+  
 });
 
 // prep for deployment
