@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { socket } from '../socket';
 import './Chats.css'
+import moment from 'moment';
 
 function Chats({ chat, username }) {
 
@@ -43,9 +44,13 @@ function Chats({ chat, username }) {
               key={m.id}
               className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
             >
-              <div className='message-item'>
-                <span className='message-username'>{m.username}</span>
-                <div className='message-content'>{m.content}</div>
+              <div>
+
+                <div className='message-item'>
+                  <span className='message-username'>{m.username}</span>
+                  <div className='message-content'>{m.content}</div>
+                </div>
+                <div className='message-time'>{moment(m.created_at).fromNow()}</div>
               </div>
             </div>
           )
