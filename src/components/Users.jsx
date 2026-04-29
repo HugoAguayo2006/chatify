@@ -1,16 +1,21 @@
 import React from 'react'
-import './Channels.css'
+import './Users.css'
 
-function Users() {
+function Users({ activeUsers }) {
   return (
-    <div className='channels-container'>
-        <div className='lista'>
-            <p> En linea - 20</p>
+    <div className='users-sidebar'>
+        <div className='users-title'>Usuarios en línea:</div>
 
-
-            <div className='chats'> WhackyPage</div>
-            <div className='chats'> SlimeGamer</div>
-        </div>
+        {activeUsers && activeUsers.length > 0 ? (
+            activeUsers.map((user, index) => (
+                <div key={index} className='user-item'>
+                    <span className='user-status-dot'>🟢</span> 
+                    {user.username || user} 
+                </div>
+            ))
+        ) : (
+            <div className='user-item'>*</div>
+        )}
     </div>
   )
 }

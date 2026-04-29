@@ -1,0 +1,67 @@
+.connection-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 2px 2px;
+}
+
+.connection-btn {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 9px 16px;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.connection-btn:hover {
+  transform: translateY(-1px);
+}
+
+.connection-btn:active {
+  transform: translateY(0);
+}
+
+.connection-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.35);
+}
+
+.connection-btn.connect {
+  background-color: #3ba55d;
+  box-shadow: 0 8px 18px rgba(59, 165, 93, 0.22);
+}
+
+.connection-btn.connect:hover {
+  background-color: #2d8a4e;
+}
+
+.connection-btn.disconnect {
+  background-color: #2f3136;
+  border-color: #4f545c;
+  color: #dcddde;
+}
+
+.connection-btn.disconnect:hover {
+  background-color: #ed4245;
+  border-color: #ed4245;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(237, 66, 69, 0.2);
+}
+
+@media (max-width: 640px) {
+  .connection-actions {
+    justify-content: stretch;
+  }
+
+  .connection-btn {
+    flex: 1;
+  }
+}

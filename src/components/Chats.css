@@ -1,52 +1,84 @@
-
-
-.chats-container{
-    width: 100%;
-    max-width: 800px;
-    height: 600px;
-    background-color: rgba(47, 122, 0, 0.281);
-    box-sizing: border-box;
-    padding: 15px 10px;
+.chats-container {
+  background-color: #36393f;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
 }
 
-.chats{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
+.chat-header {
+  border-bottom: 1px solid #4f545c;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
-.chats-container p{
-    color: #d5ddd2;
-    font-size: 20px;
-    font-weight: 600;
-    display: flex;
-    align-items: flex-start;
-    margin: 0;
+.messages-list {
+  flex-grow: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-.chat-title{
-    flex-shrink: 0;
-    height: 80px;
-    font-style: italic;
-    font-weight: bold;
+.message-wrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-.mensajes{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: auto;
+.message-wrapper.sent {
+  justify-content: flex-end;
 }
 
-.own-message{
-    align-self: flex-end;
-    text-align: right;
+.message-wrapper.received {
+  justify-content: flex-start;
 }
 
-.other-message{
-    align-self: flex-start;
-    text-align: left;
+.message-item {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: #2f3136;
+  color: #dcddde;
+}
+
+.message-wrapper.sent .message-item {
+  background-color: #3ba55d;
+  color: #ffffff;
+  border-bottom-right-radius: 2px; 
+}
+
+.message-wrapper.received .message-item {
+  border-bottom-left-radius: 2px;
+}
+
+.message-username {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.message-wrapper.received .message-username {
+  color: #3ba55d;
+}
+
+.message-content {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.chat-form-container {
+  display: flex;
+  gap: 12px;
+  padding: 15px 0 0;
+  border-top: 1px solid #4f545c; 
+  background-color: #36393f;
 }

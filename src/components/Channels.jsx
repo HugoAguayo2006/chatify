@@ -34,14 +34,33 @@ function Channels({chat, setChat, username}) {
 
   return (
     <div className='channels-container'>
-        <div className='lista'>
-            <p> SW-TC</p>
-            <div className='chats'> Text Channels</div>
-            <button className='chats' onClick={()=> handleChangeChat('General')}> # General </button>
-            <button className='chats' onClick={()=> handleChangeChat('Tech Talk')}> # Tech Talk</button>
-            <button className='chats' onClick={()=> handleChangeChat('Random')}> # Random</button>
-            <button className='chats'onClick={()=> handleChangeChat('Gaming')}> # Gaming</button>
-        </div>
+        <p>SW-TC</p>
+        <p style={{ marginTop: '20px', fontSize: '0.75rem' }}>Canales</p>
+        
+        <button 
+          className={`channel-btn ${chat === 'General' ? 'active' : ''}`} 
+          onClick={() => handleChangeChat('General')}
+        > 
+          # General 
+        </button>
+        <button 
+          className={`channel-btn ${chat === 'Tech Talk' ? 'active' : ''}`} 
+          onClick={() => handleChangeChat('Tech Talk')}
+        > 
+          # Tech Talk
+        </button>
+        <button 
+          className={`channel-btn ${chat === 'Random' ? 'active' : ''}`} 
+          onClick={() => handleChangeChat('Random')}
+        > 
+          # Random
+        </button>
+        <button 
+          className={`channel-btn ${chat === 'Gaming' ? 'active' : ''}`} 
+          onClick={() => handleChangeChat('Gaming')}
+        > 
+          # Gaming
+        </button>
     </div>
   )
 }

@@ -1,31 +1,41 @@
-
-.channels-container{
-    height: 600px;
-    width: 300px;
-    background-color: rgba(47, 122, 0, 0.617);
+.channels-container {
+  background-color: #202225;
+  height: 100%;
+  min-height: 0;
+  padding: 20px 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
 }
 
-
-.lista{
-    margin-left: 10px;
-    margin-top: 15px;
+.channels-container p {
+  color: #8e9297;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-left: 10px;
 }
 
-.channels-container p{
-    color: #d5ddd2;
-    font-size: 20px;
-    font-weight: 600;
-    display: flex;
-    align-items: flex-start;
-    
+.channel-btn {
+  display: block;
+  width: 100%;
+  background-color: transparent;
+  color: #8e9297;
+  border: none;
+  padding: 10px 15px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
-.chats{
-    width: 275px;
-    height: 20px;
+.channel-btn:hover {
+  background-color: #36393f;
+  color: #dcddde;
+}
 
-    margin-top: 10px;
-    display: flex;
-    align-items: flex-start;
-    font-size: 14px;
+.channel-btn.active {
+  background-color: #3ba55d;
+  color: #ffffff;
 }

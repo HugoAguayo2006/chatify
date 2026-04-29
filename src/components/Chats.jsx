@@ -31,18 +31,23 @@ function Chats({chat,username}) {
 
   return (
     <div className='chats-container'>
-        <p className='chat-title'>{chat} // Name: {username}</p>
-        <div className='mensajes'>
-          {messages.map((m)=>{
-            //Detecta si el mensaje es del usuario actual
-            const isOwnMessage=m.username===username
-            return(
-              <p 
+        <div className='chat-header'>{chat} // Name: {username}</div>
+        
+        <div className='messages-list'>
+          {messages.map((m) => {
+            // detecta si el mensaje es del usuario actual
+            const isOwnMessage = m.username === username;
+            
+            return (
+              <div 
                 key={m.id}
-                className={isOwnMessage ? 'message own-message':'message other-message'}
+                className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
               >
-                <strong>{m.username}</strong>: {m.content}
-              </p>
+                <div className='message-item'>
+                  <span className='message-username'>{m.username}</span>
+                  <div className='message-content'>{m.content}</div>
+                </div>
+              </div>
             )
           })}
         </div>
