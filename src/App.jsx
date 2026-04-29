@@ -6,38 +6,27 @@ import MyForm from './components/MyForm'
 import Channels from './components/Channels' 
 import Chats from './components/Chats'
 import Users from './components/Users'
-import { Socket } from 'socket.io-client'
 import UsernamePrompt from './components/UsernamePrompt'
-
+import JoinScreen from './components/JoinScreen'
 
 function App() {
-  const [count, setCount] = useState(0)
-  //Username guardado por room
   const STORAGE_KEY='Chatify_usernames_by_room'
   const [chat, setChat] = useState('General')
   const [username, setUsername] = useState("")
-  const [unlockedRooms, setUnlockedRooms] = useState({})
   const [activeUsers, setActiveUsers] = useState([])
+  const [hasStarted, setHasStarted] = useState(false)
   
+  // 1. CORRECCIÓN: Lo regresamos a {} para que solo recuerde 
+  // los canales en la sesión actual y te pida nombre en los nuevos
+  const [unlockedRooms, setUnlockedRooms] = useState({})
 
-
-  //Leemos usuarios guardados
-  const getUsernamesByRoom = () => {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}
-  }
-
-
+  // Conexión inicial de sockets
   useEffect(()=>{
     const onConnnect = () =>{
       console.log("Conectado")
     }
-   // const onDisconnect = () =>{
-     // console.log("Conectado")
-    //}
-
     
     socket.on('connect',onConnnect)
-
     socket.on('room users', (users) => {
       console.log("Usuarios del server:", users);
       setActiveUsers(users)
@@ -48,41 +37,56 @@ function App() {
       socket.off("connect", onConnnect)
       socket.off("room users")
     }
-    //socket.on('disconnect',onDisconnect)
   },[])
 
-  useEffect(() => {
-    const usernamesByRoom = getUsernamesByRoom()
-    const savedUsername = usernamesByRoom[chat]
-
-    //Si existe, entra al room
-    if (unlockedRooms[chat]) {
-      setUsername(unlockedRooms[chat])
-    } else {
-      setUsername('')
-    }
-  },[chat,unlockedRooms])
-
+  // 2. CORRECCIÓN: Emitir entrada y SALIDA del room
   useEffect(() => {
     if (username && chat) {
       socket.emit('join room', { username, chat: chat })
     }
+    
+    // Función de limpieza: cuando cambias de chat, avisa que saliste del anterior
+    return () => {
+      if (username && chat) {
+        socket.emit('leave room', { chat: chat })
+      }
+    }
   }, [username, chat])
 
+  // 3. CORRECCIÓN: Dejamos UN SOLO useEffect para la validación de nombres
+  useEffect(() => {
+    const nameForThisRoom = unlockedRooms[chat];
 
-  //Guarda username del room actual
-  const handleSaveUsername = (newUsername) => {
-    const cleanUsername = newUsername.trim()
-    if (!cleanUsername) return
+    if (nameForThisRoom) {
+      setUsername(nameForThisRoom);
+    } else {
+      setUsername('');
+    }
+  }, [chat, unlockedRooms]);
 
-    const usernamesByRoom = getUsernamesByRoom()
-    const updatedUsernames={...usernamesByRoom,[chat]: cleanUsername}
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(updatedUsernames))
-    setUnlockedRooms({...unlockedRooms,[chat]: cleanUsername})
-    setUsername(cleanUsername)
+  // Guarda username del room actual
+  const handleSaveUsername = (newUsername, targetRoom = chat) => {
+    const cleanUsername = newUsername.trim();
+    if (!cleanUsername) return;
+
+    const updatedRooms = { ...unlockedRooms, [targetRoom]: cleanUsername };
+  
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRooms));
+    setUnlockedRooms(updatedRooms);
+  };
+
+  const handleInitialJoin = (selectedUsername, selectedRoom) => {
+    setChat(selectedRoom);
+    handleSaveUsername(selectedUsername, selectedRoom);
+    setHasStarted(true);
   }
 
+  // checa para poner la pantalla de inicio
+  if (!hasStarted) {
+    return <JoinScreen onJoin={handleInitialJoin} />
+  }
 
+  // Layout principal
   return (
     <>
     <div className="app-layout">
@@ -97,7 +101,7 @@ function App() {
             <ManageConnnection/>
           </>
           ):(
-          <UsernamePrompt room={chat} onSubmit={handleSaveUsername}/>
+          <UsernamePrompt room={chat} onSubmit={(name) => handleSaveUsername(name, chat)}/>
         )}
       </div>
       <div className="right">

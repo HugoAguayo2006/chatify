@@ -1,21 +1,31 @@
-
-.form-container{
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+.chat-form-input {
+  flex-grow: 1; 
+  padding: 14px 18px;
+  background-color: #40444b; 
+  color: #dcddde;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.barra{
-    width: 100%;
-    max-width: 800px;
-    height: 30px;
-    box-sizing: border-box;
+.chat-form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3ba55d; 
 }
 
-.btn-send{
-    width: 100px;
-    height: 30px;
+.chat-form-btn {
+  padding: 0 24px;
+  background-color: #3ba55d;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-form-btn:hover {
+  background-color: #2d8a4e;
 }

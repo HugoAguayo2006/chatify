@@ -1,0 +1,38 @@
+.users-sidebar {
+  background-color: #2f3136;
+  height: 100vh;
+  padding: 20px 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.users-title {
+  color: #8e9297;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 4px;
+  background-color: transparent;
+  color: #8e9297;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.user-item:hover {
+  background-color: #36393f;
+  color: #dcddde;
+  cursor: default;
+}
+
+.user-status-dot {
+  color: #3ba55d;
+  font-size: 0.8rem;
+  margin-right: 10px;
+}

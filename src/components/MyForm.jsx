@@ -20,17 +20,27 @@ function MyForm() {
 
 
   return (
-    <div className='form-container'>
+    <form 
+      className='chat-form-container' 
+      onSubmit={(e) => {
+        e.preventDefault(); 
+        handleClick();     
+      }}
+    >
       <input 
-      type="text" 
-      name="messageData" 
-      value={messageData}
-      onChange={handleOnchange} 
-      className='barra'/>
-      <button className="btn-send" onClick={handleClick}> Send</button>
-    </div>
+        type="text" 
+        name="messageData" 
+        value={messageData}
+        onChange={handleOnchange} 
+        className='chat-form-input'
+        placeholder="Escribe un mensaje..."
+        autoComplete="off" /* esto hace que no aparezcan mensajes pasados*/
+      />
+      <button type="submit" className="chat-form-btn"> 
+        Send 
+      </button>
+    </form>
   )
-
 }
 
 export default MyForm
