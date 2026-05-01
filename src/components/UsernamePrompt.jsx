@@ -14,13 +14,13 @@ function UsernamePrompt({room,onSubmit}){
 
     return (
     <div className="prompt-container">
-      <h2 className="prompt-title">Ingresa tu username para #{room}</h2>
+      <h2 className="prompt-title">Ingresa tu nombre de usuario para #{room}</h2>
       
       <form onSubmit={handleSubmit} className="prompt-form">
         <input
           type="text"
           className="prompt-input"
-          placeholder="Username"
+          placeholder="Nombre de usuario"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           required
