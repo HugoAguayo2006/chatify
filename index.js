@@ -41,13 +41,6 @@ app.get('/', (req, res) => {
 io.on('connection', async (socket) => {
   console.log('a user connected', socket.id);
 
-  socket.on('typing', ({ username, chat }) => {
-    socket.data.username = username;
-    socket.data.room = chat;
-    io.to(chat).emit('typing', { username });
-    console.log(`${username} is typing in room: ${chat}`);
-  })
-
   // Función auxiliar para actualizar la lista de usuarios en una sala
   const updateRoomUsers = async (roomName) => {
     // obtener todos los usuarios conectados a una sala especifica
@@ -56,13 +49,13 @@ io.on('connection', async (socket) => {
     const users = socketsInRoom.map(s => s.data.username).filter(Boolean);
     // quitar duplicados
     const uniqueUsers = [...new Set(users)];
-
+    
     // Emitimos la lista a todos en la sala
     io.to(roomName).emit('room users', uniqueUsers);
   };
 
   // PRIMER SOCKET nuevo que recibe el nombre del usuario y el chat/room en el que esta
-  socket.on('join room', async ({ username, chat }) => {
+  socket.on('join room', async({ username, chat }) => {
 
     // En el socket guardamos data
     socket.data.username = username;
@@ -76,7 +69,7 @@ io.on('connection', async (socket) => {
     await updateRoomUsers(chat);
 
     try {
-      // Filtrado para traer los de una sala especifica WHERE room = $1 
+    // Filtrado para traer los de una sala especifica WHERE room = $1 
       const result = await pool.query(
         `SELECT id, content, username, room, created_at
          FROM messages
@@ -104,15 +97,15 @@ io.on('connection', async (socket) => {
   })
 
   // SEGUNDO SOCKET nuevo que recibe el chat/room en el que esta
-  socket.on('leave room', async ({ chat }) => {
+  socket.on('leave room', async({ chat }) => {
     console.log("Leave room| room:", chat);
     // Como entramos con join debemos de salir
     socket.leave(chat);
     await updateRoomUsers(chat);
   })
 
-  // TECER SOCKET, EL QUE EMPEZAMOS A TRABAJAR EN CLASE
-  socket.on('chat message', async (msg) => {
+// TECER SOCKET, EL QUE EMPEZAMOS A TRABAJAR EN CLASE
+ socket.on('chat message', async (msg) => {
     // Nueva logica de asignacion de valores
     const message = typeof msg === 'object' ? msg : { content: msg };
     const content = message.content;
@@ -153,7 +146,7 @@ io.on('connection', async (socket) => {
 
   }
 
-
+  
 });
 
 // prep for deployment
