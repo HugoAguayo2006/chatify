@@ -30,7 +30,7 @@ function JoinScreen({ onJoin }) {
             <div className="input-wrapper">
               <input 
                 type="text" 
-                placeholder="Ingresa tu username..." 
+                placeholder="Ingresa tu nombre de usuario..." 
                 value={tempUsername}
                 onChange={(e) => setTempUsername(e.target.value)}
                 required
@@ -39,7 +39,7 @@ function JoinScreen({ onJoin }) {
           </div>
 
           <div className="form-group">
-            <label>SELECCIONAR ROOM</label>
+            <label>SELECCIONAR SALA</label>
             <div className="room-list">
               {rooms.map((room) => (
                 <div 
@@ -59,7 +59,7 @@ function JoinScreen({ onJoin }) {
             className="join-btn"
             disabled={!tempUsername.trim()}
           >
-            ENTRAR A ROOM
+            ENTRAR A LA SALA
           </button>
         </form>
       </div>

@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { socket } from '../socket';
 import './Chats.css'
 import moment from 'moment';
+import 'moment/locale/es';
+
+moment.locale('es');
 
 function Chats({ chat, username }) {
 
@@ -64,7 +67,7 @@ function Chats({ chat, username }) {
 
   return (
     <div className='chats-container'>
-      <div className='chat-header'>{chat} // Name: {username}</div>
+      <div className='chat-header'>{chat} // Nombre: {username}</div>
 
       <div className='messages-list'>
         {messages.map((m) => {
@@ -81,7 +84,7 @@ function Chats({ chat, username }) {
                   <span className='message-username'>{m.username}</span>
                   <div className='message-content'>{m.content}</div>
                 </div>
-                <div className='message-time'>{moment(m.created_at).fromNow()}</div>
+                <div className='message-time'>{moment(m.created_at).format('h:mm A')}</div>
               </div>
               <div ref={scrollRef} />
             </div>
@@ -89,9 +92,9 @@ function Chats({ chat, username }) {
         })}
       </div>
 
-      {
-        userTyping && userTyping.username != username && <div>{userTyping.username} is typing</div>
-      }
+      <div className='typing-indicator'>
+        {userTyping && userTyping.username !== username && `${userTyping.username} está escribiendo...`}
+      </div>
     </div>
   )
 }
