@@ -63,6 +63,15 @@ function Chats({ chat, username }) {
     }
   }, [messages]);
 
+  const formatMessageDay = (date) => {
+    const messageDate = moment(date);
+
+    if (messageDate.isSame(moment(), 'day')) return 'Hoy';
+    if (messageDate.isSame(moment().subtract(1, 'day'), 'day')) return 'Ayer';
+
+    return messageDate.format('D [de] MMMM [de] YYYY');
+  }
+
 
 
   return (
@@ -70,24 +79,33 @@ function Chats({ chat, username }) {
       <div className='chat-header'>{chat} // Nombre: {username}</div>
 
       <div className='messages-list'>
-        {messages.map((m) => {
+        {messages.map((m, index) => {
           // detecta si el mensaje es del usuario actual
           const isOwnMessage = m.username === username;
+          const previousMessage = messages[index - 1];
+          const shouldShowDateSeparator = !previousMessage || !moment(m.created_at).isSame(previousMessage.created_at, 'day');
 
           return (
-            <div
-              key={m.id}
-              className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
-            >
-              <div>
-                <div className='message-item'>
-                  <span className='message-username'>{m.username}</span>
-                  <div className='message-content'>{m.content}</div>
+            <React.Fragment key={m.id}>
+              {shouldShowDateSeparator && (
+                <div className='date-separator'>
+                  <span>{formatMessageDay(m.created_at)}</span>
                 </div>
-                <div className='message-time'>{moment(m.created_at).format('h:mm A')}</div>
+              )}
+
+              <div
+                className={`message-wrapper ${isOwnMessage ? 'sent' : 'received'}`}
+              >
+                <div>
+                  <div className='message-item'>
+                    <span className='message-username'>{m.username}</span>
+                    <div className='message-content'>{m.content}</div>
+                  </div>
+                  <div className='message-time'>{moment(m.created_at).format('h:mm A')}</div>
+                </div>
+                <div ref={scrollRef} />
               </div>
-              <div ref={scrollRef} />
-            </div>
+            </React.Fragment>
           )
         })}
       </div>
