@@ -34,6 +34,21 @@
 	margin-bottom: 15px;
 }
 
+.date-separator {
+	display: flex;
+	justify-content: center;
+	margin: 6px 0 18px;
+}
+
+.date-separator span {
+	padding: 7px 14px;
+	border-radius: 999px;
+	background-color: #2f3136;
+	color: #ffffff;
+	font-size: 0.85rem;
+	font-weight: 700;
+}
+
 .message-wrapper > div {
 	max-width: 70%;
 }
